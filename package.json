@@ -1,0 +1,33 @@
+{
+  "name": "tiktok-shop-manager",
+  "version": "1.0.0",
+  "description": "TikTok Shop Account Manager with Gmail to Telegram Bot",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "bot": "node indexSimple.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "tiktok",
+    "shop",
+    "manager",
+    "telegram",
+    "gmail"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^5.1.0",
+    "googleapis": "^128.0.0",
+    "imap": "^0.8.19",
+    "mailparser": "^3.9.0",
+    "node-telegram-bot-api": "^0.64.0",
+    "otpauth": "^9.4.1",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

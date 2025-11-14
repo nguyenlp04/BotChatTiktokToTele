@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Tài khoản TikTok Shop</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛍️ Quản lý Tài khoản TikTok Shop</h1>
+            <div class="stats">
+                <div class="stat-card">
+                    <span class="stat-number" id="totalAccounts">0</span>
+                    <span class="stat-label">Tổng tài khoản</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="filteredAccounts">0</span>
+                    <span class="stat-label">Kết quả tìm kiếm</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="toolbar">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔍 Tìm kiếm theo Shop Name, Email, Profile...">
+            </div>
+            <button class="btn btn-primary" id="addBtn">➕ Thêm tài khoản</button>
+            <label for="importFile" class="btn btn-info" style="margin: 0; cursor: pointer;">📤 Import Excel</label>
+            <input type="file" id="importFile" accept=".xlsx,.xls" style="display: none;">
+            <button class="btn btn-warning" id="exportTemplateBtn">📋 Export Mẫu</button>
+            <button class="btn btn-success" id="exportBtn">📥 Export Data</button>
+        </div>
+
+        <div class="table-container">
+            <table id="accountsTable">
+                <thead>
+                    <tr>
+                        <th>⇅</th>
+                        <th>STT</th>
+                        <th class="sortable" onclick="sortTable('Profile')">
+                            Profile <span class="sort-icon">⇅</span>
+                        </th>
+                        <th class="sortable" onclick="sortTable('Shop Name')">
+                            Shop Name <span class="sort-icon">⇅</span>
+                        </th>
+                        <th class="sortable" onclick="sortTable('Email')">
+                            Email <span class="sort-icon">⇅</span>
+                        </th>
+                        <th>Pass Acc</th>
+                        <th>2FA</th>
+                        <th class="sortable" onclick="sortTable('Note')">
+                            Note <span class="sort-icon">⇅</span>
+                        </th>
+                        <th class="sortable" onclick="sortTable('Limit')">
+                            Limit <span class="sort-icon">⇅</span>
+                        </th>
+                        <th class="sortable" onclick="sortTable('Score')">
+                            Score <span class="sort-icon">⇅</span>
+                        </th>
+                        <th class="sortable" onclick="sortTable('Tier')">
+                            Tier <span class="sort-icon">⇅</span>
+                        </th>
+                        <th class="sortable" onclick="sortTable('Status')">
+                            Trạng thái <span class="sort-icon">⇅</span>
+                        </th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody id="accountsBody">
+                    <tr>
+                        <td colspan="10" class="loading">Đang tải dữ liệu...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal xem chi tiết -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>📋 Chi tiết tài khoản</h2>
+            <div id="detailContent"></div>
+        </div>
+    </div>
+
+    <!-- Modal thêm tài khoản -->
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>➕ Thêm tài khoản mới</h2>
+            <form id="addForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Profile:</label>
+                        <input type="text" name="profile" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Shop Name:</label>
+                        <input type="text" name="shopName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>ShopCode:</label>
+                        <input type="text" name="shopCode">
+                    </div>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Pass Acc:</label>
+                        <input type="text" name="passAcc" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Full Name:</label>
+                        <input type="text" name="fullName">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone:</label>
+                        <input type="text" name="phone">
+                    </div>
+                    <div class="form-group">
+                        <label>SSN:</label>
+                        <input type="text" name="ssn">
+                    </div>
+                    <div class="form-group">
+                        <label>Address:</label>
+                        <input type="text" name="address">
+                    </div>
+                    <div class="form-group">
+                        <label>Date Of Birth:</label>
+                        <input type="text" name="dateOfBirth" placeholder="MM/DD/YYYY">
+                    </div>
+                    <div class="form-group">
+                        <label>Business Name:</label>
+                        <input type="text" name="businessName">
+                    </div>
+                    <div class="form-group">
+                        <label>EIN:</label>
+                        <input type="text" name="ein">
+                    </div>
+                    <div class="form-group">
+                        <label>Business Address:</label>
+                        <input type="text" name="businessAddress">
+                    </div>
+                    <div class="form-group">
+                        <label>Bank:</label>
+                        <input type="text" name="bank">
+                    </div>
+                    <div class="form-group">
+                        <label>Proxy:</label>
+                        <input type="text" name="proxy" placeholder="ip:port:user:pass">
+                    </div>
+                    <div class="form-group">
+                        <label>2FA Mail:</label>
+                        <input type="text" name="twoFaMail" placeholder="Mã 2FA Email">
+                    </div>
+                    <div class="form-group">
+                        <label>2FA Shop:</label>
+                        <input type="text" name="twoFaShop" placeholder="Mã 2FA Shop">
+                    </div>
+                    <div class="form-group">
+                        <label>Note:</label>
+                        <input type="text" name="note" placeholder="Ghi chú">
+                    </div>
+                    <div class="form-group">
+                        <label>Limit:</label>
+                        <input type="text" name="limit" placeholder="Limit">
+                    </div>
+                    <div class="form-group">
+                        <label>Score:</label>
+                        <input type="text" name="score" placeholder="Score">
+                    </div>
+                    <div class="form-group">
+                        <label>Tier:</label>
+                        <input type="text" name="tier" placeholder="Tier">
+                    </div>
+                    <div class="form-group">
+                        <label>Trạng thái:</label>
+                        <select name="status">
+                            <option value="Live">Live</option>
+                            <option value="Die">Die</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">💾 Lưu</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeAddModal()">Hủy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal sửa tài khoản -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>✏️ Sửa tài khoản</h2>
+            <form id="editForm">
+                <input type="hidden" id="editIndex" name="index">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Profile:</label>
+                        <input type="text" id="editProfile" name="profile" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Shop Name:</label>
+                        <input type="text" id="editShopName" name="shopName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>ShopCode:</label>
+                        <input type="text" id="editShopCode" name="shopCode">
+                    </div>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" id="editEmail" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Pass Acc:</label>
+                        <input type="text" id="editPassAcc" name="passAcc" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Full Name:</label>
+                        <input type="text" id="editFullName" name="fullName">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone:</label>
+                        <input type="text" id="editPhone" name="phone">
+                    </div>
+                    <div class="form-group">
+                        <label>SSN:</label>
+                        <input type="text" id="editSSN" name="ssn">
+                    </div>
+                    <div class="form-group">
+                        <label>Address:</label>
+                        <input type="text" id="editAddress" name="address">
+                    </div>
+                    <div class="form-group">
+                        <label>Date Of Birth:</label>
+                        <input type="text" id="editDateOfBirth" name="dateOfBirth" placeholder="MM/DD/YYYY">
+                    </div>
+                    <div class="form-group">
+                        <label>Business Name:</label>
+                        <input type="text" id="editBusinessName" name="businessName">
+                    </div>
+                    <div class="form-group">
+                        <label>EIN:</label>
+                        <input type="text" id="editEIN" name="ein">
+                    </div>
+                    <div class="form-group">
+                        <label>Business Address:</label>
+                        <input type="text" id="editBusinessAddress" name="businessAddress">
+                    </div>
+                    <div class="form-group">
+                        <label>Bank:</label>
+                        <input type="text" id="editBank" name="bank">
+                    </div>
+                    <div class="form-group">
+                        <label>Proxy:</label>
+                        <input type="text" id="editProxy" name="proxy" placeholder="ip:port:user:pass">
+                    </div>
+                    <div class="form-group">
+                        <label>2FA Mail:</label>
+                        <input type="text" id="edit2FAMail" name="twoFaMail" placeholder="Mã 2FA Email">
+                    </div>
+                    <div class="form-group">
+                        <label>2FA Shop:</label>
+                        <input type="text" id="edit2FAShop" name="twoFaShop" placeholder="Mã 2FA Shop">
+                    </div>
+                    <div class="form-group">
+                        <label>Note:</label>
+                        <input type="text" id="editNote" name="note" placeholder="Ghi chú">
+                    </div>
+                    <div class="form-group">
+                        <label>Limit:</label>
+                        <input type="text" id="editLimit" name="limit" placeholder="Limit">
+                    </div>
+                    <div class="form-group">
+                        <label>Score:</label>
+                        <input type="text" id="editScore" name="score" placeholder="Score">
+                    </div>
+                    <div class="form-group">
+                        <label>Tier:</label>
+                        <input type="text" id="editTier" name="tier" placeholder="Tier">
+                    </div>
+                    <div class="form-group">
+                        <label>Trạng thái:</label>
+                        <select id="editStatus" name="status">
+                            <option value="Live">Live</option>
+                            <option value="Die">Die</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">💾 Lưu</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Hủy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

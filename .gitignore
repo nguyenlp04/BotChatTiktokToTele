@@ -1,0 +1,7 @@
+node_modules/
+.env
+token.json
+credentials.json
+*.log
+processed_emails.json
+bot.log
